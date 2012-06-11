@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
                 strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do ENDPROC
                 corta(parametros[0]);
                 
+                
                 break;
             }
         }
