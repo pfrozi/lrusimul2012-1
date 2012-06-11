@@ -63,11 +63,15 @@ void endProc(int id)
 }
 
 /*
-    Função: 
-    Parâmetros: 
-    Descrição: 
+    Função: corta
+    Parâmetros: string(char[])
+    Descrição: Função que corta o que sobra do string
 */
-
+void corta(char string[])
+{
+    if(string[strlen(string)-1]=='\n')
+       string[strlen(string)-1] ='\0';
+}
 /*
     Função: 
     Parâmetros: 
