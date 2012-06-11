@@ -6,12 +6,8 @@ typedef enum enumComandos{
     ENDPROC
 }enumComandos;
 
- typedef struct process{
-    int pid;
-    
-} process;
- 
- typedef struct page{
+
+typedef struct page{
     int pagina;
     int acessos;
     int nroPageFault; // será no mínimo 1, quando a página é lida pela primeira vez
@@ -19,5 +15,25 @@ typedef enum enumComandos{
 } page;
 
 typedef struct LDECpages{
-
+    page        pg;
+    LDECpages*  ant;
+    LDECpages*  prox;
 } LDECpages;
+
+ typedef struct process{
+    int pid;
+    LDECpages paginas;
+} process;
+ 
+ 
+
+
+// procedimentos e funções de leitura do arquivo
+void memSize(int size);
+void procSize(int id, int size);
+void Read(int id, int size);
+void Write(int id, int size);
+void endProc(int id);
+
+// procedimentos e funções utilizados
+void corta(char string[]);
