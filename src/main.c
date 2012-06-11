@@ -67,19 +67,34 @@ int main(int argc, char *argv[])
         {
             case PROCSIZE:
             {
+                trcpy(parametros[0],strtok(linha," \t"));     // extrai o parâmetro 1 do READ
+                strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do READ
+                corta(parametros[1]);
                 
+                break;
             }
             case READ:
             {
+                strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do READ
+                strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do READ
+                corta(parametros[1]);
                 
+                break;
             }
             case WRITE:
             {
+                strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do WRITE
+                strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do WRITE
+                corta(parametros[1]);
                 
+                break;
             }
             case ENDPROC:
             {
+                strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do ENDPROC
+                corta(parametros[0]);
                 
+                break;
             }
         }
     }
