@@ -6,12 +6,6 @@ typedef enum enumComandos{
     ENDPROC
 }enumComandos;
 
-typedef struct ListMEMO{
-    int  pagina;
-    int  bitRef;
-    int  bitMod;
-    ListMEMO* prox;
-}ListMEMO;
 
 typedef struct page{
     //int  pagina;
