@@ -1,5 +1,5 @@
-#DEFINE INICIALIZADO   1
-#DEFINE ENCERRADO      0
+#define INICIALIZADO   1
+#define ENCERRADO      0
 
 #include "../include/lrusimul.h"
 

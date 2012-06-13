@@ -1,11 +1,12 @@
-#DEFINE DISPONIVEL -1
+#define DISPONIVEL -1
+#define ARQ_LOG "../perf/log.txt"
 
 typedef struct LRUclock{
     int  pid;
     int  pagina;
     int  bitRef;
     int  bitSujo;
-}LRUclock;
+} LRUclock;
 
 typedef enum enumComandos{
     MEMSIZE,
@@ -19,6 +20,8 @@ typedef enum enumComandos{
 typedef struct tmemoria{
     int  pid;
     int  pagina;
+    int  bitRef;
+    int  bitSujo;
 } tmemoria;
 
 typedef struct page{
@@ -26,9 +29,7 @@ typedef struct page{
     int  acessos;
     int  nroPageFault;   // será no mínimo 1, quando a página é lida pela primeira vez
     int  nroSubst;       // Quantas vezes esta página foi escolhida como "vítima", caso não existam mais páginas disponíveis na memória RAM
-    char SwapMem;
-    int  bitRef;
-    int  bitSujo;
+    char local;          // Indica se a página está na memória 'M' ou no swap 'S', quando o processo é criado todas as páginas estão no swap
 } page;
 
 
