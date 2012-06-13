@@ -9,7 +9,6 @@ lrusimul: src/main.c src/lrusimul.c src/processos.c
 	
 clean:
 	rm -rf */*o
-	rm -rf */*a
 	rm -rf bin/*
 
 
