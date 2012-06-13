@@ -1,3 +1,12 @@
+#DEFINE DISPONIVEL -1
+
+typedef struct LRUclock{
+    int  pid;
+    int  pagina;
+    int  bitRef;
+    int  bitSujo;
+}LRUclock;
+
 typedef enum enumComandos{
     MEMSIZE,
     PROCSIZE,
@@ -6,25 +15,27 @@ typedef enum enumComandos{
     ENDPROC
 }enumComandos;
 
+// Estrutura para os elementos do vetor memoria, com quadro igual a indice
+typedef struct tmemoria{
+    int  pid;
+    int  pagina;
+} tmemoria;
 
 typedef struct page{
-    //int  pagina;
-    int  quadro;
+    int  pagina;
     int  acessos;
     int  nroPageFault;   // será no mínimo 1, quando a página é lida pela primeira vez
     int  nroSubst;       // Quantas vezes esta página foi escolhida como "vítima", caso não existam mais páginas disponíveis na memória RAM
     char SwapMem;
+    int  bitRef;
+    int  bitSujo;
 } page;
 
-typedef struct TABpages{
-    page        pg;
-    LDECpages*  ant;
-    LDECpages*  prox;
-} TABpages;
-
  typedef struct process{
-    int pid;
-    TABpages* paginas;
+    int         pid;
+    page*       paginas;
+    process*    prox;
+    process*    ant;
 } process;
  
  

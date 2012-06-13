@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "lrusimul.h"
+#include "../include/lrusimul.h"
 
 
 int main(int argc, char *argv[])
@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
                 strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do READ
                 corta(parametros[1]);
                 
+                procSize(atoi(parametros[0]),atoi(parametros[1]));
+                
                 break;
             }
             case READ:
@@ -78,6 +80,8 @@ int main(int argc, char *argv[])
                 strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do READ
                 strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do READ
                 corta(parametros[1]);
+                
+                Read(atoi(parametros[0]),atoi(parametros[1]));
                 
                 break;
             }
@@ -87,6 +91,8 @@ int main(int argc, char *argv[])
                 strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do WRITE
                 corta(parametros[1]);
                 
+                Write(atoi(parametros[0]),atoi(parametros[1]));
+                
                 break;
             }
             case ENDPROC:
@@ -94,6 +100,7 @@ int main(int argc, char *argv[])
                 strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do ENDPROC
                 corta(parametros[0]);
                 
+                endProc(atoi(parametros[0]));
                 
                 break;
             }

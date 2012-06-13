@@ -1,6 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+tmemoria*   Memoria;
+process*    Processos;
+
+/*   Funções internas - INICIO     */
+/*
+    Função: criaMemoria
+    Parâmetros: n(inteiro)
+    Descrição: Cria vetor que representa a memória física (RAM) com n quadros. Retorna um ponteiro para o vetor.
+*/
+tmemoria* crimaMemoria(int n)
+{
+    int i;
+    tmemoria* aux;
+    
+    aux = (tmemoria*)malloc(sizeof(tmemoria) * n);
+    
+    // Seta todos os quadros para disponível
+    for(i = 0;i < n; i++){
+        aux[i].pid    = DISPONIVEL;
+		aux[i].pagina = DISPONIVEL;
+    }
+        
+    return aux;
+}
+
+
+/*      Funções internas - FIM     */
 /*
     Função: memSize
     Parâmetros: size(inteiro)
