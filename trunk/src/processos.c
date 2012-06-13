@@ -10,7 +10,7 @@ process* cria_lista(void)
 }
 
 
-process* insere_ord(process *l, int pid, int size, int page* paginas)
+process* insere(process *l, int pid, int size, int page* paginas)
 {
     process *novo; //novo elemento
     process *ant = NULL; //ponteiro auxiliar para a posição anterior
@@ -24,7 +24,7 @@ process* insere_ord(process *l, int pid, int size, int page* paginas)
     novo->paginas = paginas;
    
     /*procurando a posição de inserção*/
-    while ((ptaux!=NULL) && (ptaux->pid != pid)) //se info.titulo < dados.titulo então strcmp retorna um valor menor que zero
+    while ((ptaux!=NULL) && (ptaux->pid < pid)) 
     {
         ant = ptaux;
         ptaux = ptaux->prox;
@@ -52,7 +52,7 @@ process* remove(process* l, int pid)
     process *ptaux = l;  //ponteiro auxiliar para percorrer a lista
 
     /*procura o elemento na lista*/
-    while (ptaux !=NULL && (strcmp(ptaux->info.titulo, titulo)))
+    while (ptaux !=NULL && (ptaux->pid != pid))
     {          
         ant = ptaux;
         ptaux = ptaux->prox;
@@ -71,3 +71,29 @@ process* remove(process* l, int pid)
     
     return l;
 }  
+
+void imprimeCrescente(process* l)
+{  
+    process* ptaux;
+    if (l == NULL)
+        puts("lista vazia");
+    else
+        for (ptaux=l; ptaux!=NULL; ptaux=ptaux->prox)
+            printf("PID = %10d Size(paginas) = %10d Estado = %d\n"
+                   , ptaux->pid
+                   , ptaux->size,
+                     ptaux->estado);
+}
+ 
+process* destroi(process* l)
+{
+   process *ptaux; //ponteiro auxiliar para percorrer a lista
+   while (l != NULL)
+   {
+         ptaux = l;
+         l = l->prox;
+         free(ptaux);
+   }
+   free(l);   
+   return NULL;            
+}   
