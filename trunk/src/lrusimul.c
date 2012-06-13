@@ -11,7 +11,7 @@ process*    Processos;
     Parâmetros: n(inteiro)
     Descrição: Cria vetor que representa a memória física (RAM) com n quadros. Retorna um ponteiro para o vetor.
 */
-tmemoria* crimaMemoria(int n)
+tmemoria* criaMemoria(int n)
 {
     int i;
     tmemoria* aux;
@@ -20,8 +20,10 @@ tmemoria* crimaMemoria(int n)
     
     // Seta todos os quadros para disponível
     for(i = 0;i < n; i++){
-        aux[i].pid    = DISPONIVEL;
-		aux[i].pagina = DISPONIVEL;
+        aux[i].pid     = DISPONIVEL;
+		aux[i].pagina  = DISPONIVEL;
+        aux[i].bitRef  = 0;
+        aux[i].bitSujo = 0;
     }
         
     return aux;
