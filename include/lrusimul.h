@@ -31,14 +31,6 @@ typedef struct page{
     int  bitSujo;
 } page;
 
- typedef struct process{
-    int         pid;
-    page*       paginas;
-    process*    prox;
-    process*    ant;
-} process;
- 
- 
 
 // procedimentos e funções de leitura do arquivo
 void memSize(int size);
@@ -46,6 +38,9 @@ void procSize(int id, int size);
 void Read(int id, int size);
 void Write(int id, int size);
 void endProc(int id);
+
+// procedimento de criação do relatório
+void criaRelatorio();
 
 // procedimentos e funções auxiliares utilizados
 void corta(char string[]);

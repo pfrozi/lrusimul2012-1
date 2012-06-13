@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/lrusimul.h"
 
 tmemoria*   Memoria;
 process*    Processos;
@@ -100,11 +101,14 @@ void corta(char string[])
        string[strlen(string)-1] ='\0';
 }
 /*
-    Função: 
-    Parâmetros: 
-    Descrição: 
+    Função: criaRelatorio
+    Parâmetros: void
+    Descrição: Cria o relatório conforme especificação
 */
-
+void criaRelatorio()
+{
+    
+}
 /*
     Função: 
     Parâmetros: 
