@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/lrusimul.h"
+#include "../include/processos.h"
 
 int         quant_frames;
 tmemoria*   Memoria;
@@ -16,9 +18,9 @@ tmemoria* criaMemoria(int n)
 {
     int i;
     tmemoria* aux;
-    
+
     aux = (tmemoria*)malloc(sizeof(tmemoria) * n);
-    
+
     // Seta todos os quadros para disponível
     for(i = 0;i < n; i++){
         aux[i].pid     = DISPONIVEL;
@@ -26,7 +28,7 @@ tmemoria* criaMemoria(int n)
         aux[i].bitRef  = 0;
         aux[i].bitSujo = 0;
     }
-        
+
     return aux;
 }
 
@@ -41,7 +43,7 @@ void memSize(int size)
 {
     quant_frames = size;
     Memoria = criaMemoria(size);        // memoria
-    Processos = cria_lista(void);       // area de swap, onde os processos são inicializados
+    Processos = criaLista();           // area de swap, onde os processos são inicializados
 }
 
 /*
@@ -54,7 +56,7 @@ void memSize(int size)
 void procSize(int id, int size)
 {
     if (existe(Processos, id))
-        printf("Processo %d jah existe e não pode ser criado\n");
+        printf("Processo %d jah existe e não pode ser criado\n",id);
     else
         insere(Processos, id, size);
 }
@@ -71,17 +73,16 @@ void procSize(int id, int size)
 void Read(int pagina, int id)
 {
     int i;
-    
+
     int frame;
-    
+
     int pid_vitima,pag_vitima;
-    
+    process* vitProcess;
+
     int pageFault = 1;
     process* auxProcess;
-    
-    int vitima[2];
-    process* vitProcess;
-    
+
+
     for(i = 0;i<quant_frames;i++){
         if((Memoria[i].pid == id) && (Memoria[i].pagina == pagina))   // não haverá page fault
         {
@@ -89,15 +90,15 @@ void Read(int pagina, int id)
             break;
         }
     }
-    
-    auxProcess = consultaProcesso(Memoria, id); // se não existe retorna nulo
-    
+
+    auxProcess = consulta(Processos, id); // se não existe retorna nulo
+
     switch(pageFault)
     {
         case 0:                 // não ocorreu pageFault
         {
-            auxProcess->paginas[pagina]->acessos++;
-            Memoria[i]->bitRef = 1;
+            auxProcess->paginas[pagina].acessos++;
+            Memoria[i].bitRef = 1;
             break;
         }
         case 1:                 // Ocorreu pageFault
@@ -105,24 +106,24 @@ void Read(int pagina, int id)
             // verifica se solicitacao existe
             if(auxProcess==NULL)
             {
-                printf("Solicitacao de leitura invalida! \n")
+                printf("Solicitacao de leitura invalida! \n");
             }
             else
             {
-                
+
                 LRUclock(Memoria,&pid_vitima,&pag_vitima,&frame);
-                
-                vitProcess = consultaProcesso(Processos, pid_vitima);
-                auxProcess->paginas[pagina]->nroPageFault++;
-                auxProcess->paginas[pagina]->acessos++;
-                auxProcess->paginas[pagina]->local = 'M';
+
+                vitProcess = consulta(Processos, pid_vitima);
+                auxProcess->paginas[pagina].nroPageFault++;
+                auxProcess->paginas[pagina].acessos++;
+                auxProcess->paginas[pagina].local = 'M';
                 Memoria[frame].pid = id;
                 Memoria[frame].pagina = pagina;
                 Memoria[frame].bitRef = 1;
                 Memoria[frame].bitSujo = 0;
-                
-                vitProcess->paginas[pag_vitima]->nroSubst++;
-                vitProcess->paginas[pag_vitima]->local = 'S';
+
+                vitProcess->paginas[pag_vitima].nroSubst++;
+                vitProcess->paginas[pag_vitima].local = 'S';
             }
             break;
         }
@@ -141,14 +142,14 @@ void Read(int pagina, int id)
 void Write(int pagina, int id)
 {
     int i;
-    
+
     int frame;
     int pageFault = 1;
     process* auxProcess;
-    
+
     int pid_vitima,pag_vitima;
     process* vitProcess;
-    
+
     for(i = 0;i<quant_frames;i++){
         if((Memoria[i].pid == id) && (Memoria[i].pagina == pagina))   // não haverá page fault
         {
@@ -156,16 +157,16 @@ void Write(int pagina, int id)
             break;
         }
     }
-    
-    auxProcess = consultaProcesso(Memoria, id); // se não existe retorna nulo
-    
+
+    auxProcess = consulta(Processos, id); // se não existe retorna nulo
+
     switch(pageFault)
     {
         case 0:                 // não ocorreu pageFault
         {
-            auxProcess->paginas[pagina]->acessos++;
-            Memoria[i]->bitRef = 1;
-            Memoria[i]->bitSujo = 1;
+            auxProcess->paginas[pagina].acessos++;
+            Memoria[i].bitRef = 1;
+            Memoria[i].bitSujo = 1;
             break;
         }
         case 1:                 // Ocorreu pageFault
@@ -173,24 +174,24 @@ void Write(int pagina, int id)
             // verifica se solicitacao existe
             if(auxProcess==NULL)
             {
-                printf("Solicitacao de leitura invalida! \n")
+                printf("Solicitacao de leitura invalida! \n");
             }
             else
             {
-                
+
                 LRUclock(Memoria,&pid_vitima,&pag_vitima,&frame);
-                
-                vitProcess = consultaProcesso(Processos, pid_vitima);
-                auxProcess->paginas[pagina]->nroPageFault++;
-                auxProcess->paginas[pagina]->acessos++;
-                auxProcess->paginas[pagina]->local = 'M';
+
+                vitProcess = consulta(Processos, pid_vitima);
+                auxProcess->paginas[pagina].nroPageFault++;
+                auxProcess->paginas[pagina].acessos++;
+                auxProcess->paginas[pagina].local = 'M';
                 Memoria[frame].pid = id;
                 Memoria[frame].pagina = pagina;
                 Memoria[frame].bitRef = 1;
                 Memoria[frame].bitSujo = 1;
-                
-                vitProcess->paginas[pag_vitima]->nroSubst++;
-                vitProcess->paginas[pag_vitima]->local = 'S';
+
+                vitProcess->paginas[pag_vitima].nroSubst++;
+                vitProcess->paginas[pag_vitima].local = 'S';
             }
             break;
         }
@@ -205,23 +206,22 @@ void Write(int pagina, int id)
 */
 void endProc(int id)
 {
-    
+    int i ;
     // libera processo no swap
     process* auxProcess;
-    
+
     if (existe(Processos, id)){
-        printf("Processo %d nao existe logo nao pode ser finalizado!\n");
+        printf("Processo %d nao existe logo nao pode ser finalizado!\n", id);
         return;
     }
-    auxProcess = consultaProcesso(Processos, id);
+    auxProcess = consulta(Processos, id);
     auxProcess->estado = ENCERRADO;
-    
+
     // libera todos os quadros alocados a este processo
     for(i = 0;i<quant_frames;i++)
     {
         if (Memoria[i].pid == id)
             Memoria[i].pid = DISPONIVEL;
-        }
     }
 }
 
@@ -239,30 +239,30 @@ void corta(char string[])
 /*
     Função: LRUclock
     Parâmetros: Memoria(tmemoria*), vitima(int[]), frame(int*)
-    Descrição: 
+    Descrição:
 */
 void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame)
 {
     int i;
-    
-    pid_vitima = -1;
-    pag_vitima = -1;
-    frame = -1;
-    
+
+    *pid_vitima = -1;
+    *pag_vitima = -1;
+    *frame = -1;
+
     //procura um quadro livre
     for(i = 0;i<quant_frames;i++)
     {
         if (Memoria[i].pid == DISPONIVEL){
-            frame = i;
+            *frame = i;
             return;                         //encontrou frame livre
         }
     }
     for(i = 0;i<quant_frames * 2;i++)
     {
         if ((Memoria[i % quant_frames].bitRef == 0) && (Memoria[i % quant_frames].bitSujo == 0)){
-            pid_vitima = Memoria[i % quant_frames].pid;
-            pag_vitima = Memoria[i % quant_frames].pagina;
-            frame = i % quant_frames;
+            *pid_vitima = Memoria[i % quant_frames].pid;
+            *pag_vitima = Memoria[i % quant_frames].pagina;
+            *frame = i % quant_frames;
             return;
         }
         Memoria[i].bitRef = 0;
@@ -270,19 +270,19 @@ void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame)
     for(i = 0;i<quant_frames;i++)
     {
         if ((Memoria[i].bitRef == 0) && (Memoria[i].bitSujo == 1)){
-            pid_vitima = Memoria[i].pid;
-            pag_vitima = Memoria[i].pagina;
-            frame = i;
+            *pid_vitima = Memoria[i].pid;
+            *pag_vitima = Memoria[i].pagina;
+            *frame = i;
             return;
         }
     }
-    
+
 }
 
 /*
     Função: mostraRelatorio();
     Parâmetros: Nenhum
-    Descrição: Mostra o Relatório de Processos com as páginas e os acessos à 
+    Descrição: Mostra o Relatório de Processos com as páginas e os acessos à
                memória na tela, usa a função imprimeCrescente().
 */
 void mostraRelatorio() {
@@ -292,8 +292,8 @@ void mostraRelatorio() {
 /*
     Função: gravaRelatorio();
     Parâmetros: Nenhum
-    Descrição: Grava o arquivo de LOG no local definido por ARQ_LOG. O arquivo 
-               contém o Relatório de Processos com as páginas e os acessos à 
+    Descrição: Grava o arquivo de LOG no local definido por ARQ_LOG. O arquivo
+               contém o Relatório de Processos com as páginas e os acessos à
                memória, usa a função imprimeArquivo().
 */
 void gravaRelatorio() {
@@ -301,7 +301,7 @@ void gravaRelatorio() {
 }
 
 /*
-    Função: 
-    Parâmetros: 
-    Descrição: 
+    Função:
+    Parâmetros:
+    Descrição:
 */

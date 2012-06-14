@@ -1,6 +1,6 @@
+#include <stdio.h>
 #include <stdlib.h>  //necessaria para o malloc
 #include <string.h> //necessaria para o strcmp
-#include "../include/lrusimul.h"
 #include "../include/processos.h"
 
 /*
@@ -17,7 +17,7 @@ process* criaLista(void)
 /*
     Função: insere
     Parâmetros: l(process*), pid(int), size(int)
-    Descrição: Insere um novo processo com o pid e o size especificado na lista 
+    Descrição: Insere um novo processo com o pid e o size especificado na lista
                de processos l. Já cria as respectivas páginas de memória para o
                processo. As páginas são "carregadas" inicialmente no swap.
 */
@@ -29,7 +29,7 @@ process* insere(process* l, int pid, int size)
     process* ptLista = l;
     page* paginas; // Ponteiro para as páginas do processo que serão alucadas como uma matriz
     int i;
- 
+
     /* Gera um array que é um conjunto de páginas para o processo */
     paginas = (page*) malloc((sizeof(page) * size));
     for(i = 0; i < size; i++) {
@@ -39,16 +39,16 @@ process* insere(process* l, int pid, int size)
         paginas[i].nroSubst = 0;
         paginas[i].local = 'S';
     }
- 
+
     /* Gera um novo elemento processo na lista */
     novo = (process*) malloc(sizeof(process));
     novo->pid  = pid;
     novo->size = size;
     novo->estado = INICIALIZADO;
     novo->paginas = paginas;
-   
+
     /* procurando a posição de inserção */
-    while ((ptaux!=NULL) && (ptaux->pid < pid)) 
+    while ((ptaux!=NULL) && (ptaux->pid < pid))
     {
         ant = ptaux;
         ptaux = ptaux->prox;
@@ -67,7 +67,7 @@ process* insere(process* l, int pid, int size)
     }
 
     pid_contador++; // incrementa o total de processos na lista
-    
+
     return l;
 }
 
@@ -76,36 +76,36 @@ process* insere(process* l, int pid, int size)
     Parâmetros: l(process*), pid(int)
     Descrição: Remove da lista de processos l o processo com o pid especificado.
 */
-process* remove(process* l, int pid)
+process* removeProc(process* l, int pid)
 {
     process *ant = NULL; //ponteiro auxiliar para a posição anterior
     process *ptaux = l;  //ponteiro auxiliar para percorrer a lista
 
     /*procura o elemento na lista*/
     while (ptaux !=NULL && (ptaux->pid != pid))
-    {          
+    {
         ant = ptaux;
         ptaux = ptaux->prox;
     }
-     
+
     /*verifica se achou*/
     if (ptaux == NULL)
         return l; /*retorna a lista original*/
-       
+
     if (ant == NULL) /*vai remover o primeiro elemento*/
         l = ptaux->prox;
     else /*vai remover do meio ou do final*/
         ant->prox = ptaux->prox;
-    
+
     // libera a memória alocada
     free(ptaux->paginas);
-    free(ptaux); 
+    free(ptaux);
 
     pid_contador--; // decrementa o total de processos na lista
-    
+
     return l;
-}  
- 
+}
+
 /*
     Função: consulta
     Parâmetros: l(process*), pid(int)
@@ -119,51 +119,51 @@ process* consulta(process* l, int pid)
 
     /*procura o elemento na lista*/
     while (ptaux !=NULL && (ptaux->pid != pid))
-    {          
+    {
         ant = ptaux;
         ptaux = ptaux->prox;
     }
-    
+
     return ptaux;
-}  
+}
 
 /*
     Função: existe
     Parâmetros: l(process*), pid(int)
     Retorno: 1, se o processo está na lista l; 0, caso contrário
-    Descrição: Verifica se o processo identificado pelo pid existe na lista de 
+    Descrição: Verifica se o processo identificado pelo pid existe na lista de
                processos l.
 */
 int existe(process* l, int pid)
 {
     process *ptaux = NULL; //ponteiro o processo
-    
+
     ptaux = consulta(l, pid);
-    
+
     /*verifica se achou*/
     if(ptaux != NULL)
         return 1;
     else
         return 0;
-}  
- 
+}
+
 /*
     Função: existePagina
     Parâmetros: l(process*), pid(int), page(int)
-    Retorno: 1, se existe a página solicitada no processo pid; 
+    Retorno: 1, se existe a página solicitada no processo pid;
              0, caso contrário
-    Descrição: Verifica se o processo identificado pelo pid, que está na lista 
+    Descrição: Verifica se o processo identificado pelo pid, que está na lista
                l, possui a página solicitada.
 */
 int existePagina(process* l, int pid, int page)
 {
     process *ptaux = NULL; //ponteiro o processo
-    
+
     ptaux = consulta(l, pid);
-    
+
     // Verifica se acho o processo
     if(ptaux != NULL) {
-        /* Verifica se a página existe, como são sequenciais, basta verificar se 
+        /* Verifica se a página existe, como são sequenciais, basta verificar se
            é menor que o tamanho do processo em páginas (size) */
         if(page < ptaux->size) {
             return 1;
@@ -173,8 +173,8 @@ int existePagina(process* l, int pid, int page)
     } else {
         return 0;
     }
-}  
- 
+}
+
 /*
     Função: destroi
     Parâmetros: l(process*)
@@ -190,36 +190,36 @@ process* destroi(process* l)
         free(ptaux);
     }
     free(l);
-    
+
     pid_contador = 0; // zera o total de processos na lista
 
-    return NULL;            
+    return NULL;
 }
 
 /*
     Função: imprimeCrescente
     Parâmetros: l(process*)
-    Descrição: Mostra na tela a listagem de processos com algumas informações 
+    Descrição: Mostra na tela a listagem de processos com algumas informações
                além da especificação.
 */
 void imprimeCrescente(process* l)
-{  
+{
     process* ptaux;
     int i;
     int contador;
-    
+
     printf("TOTAL DE PROCESSOS = %d\n\n", pid_contador);
     if (l != NULL) {
         for(ptaux=l, contador = 0; ptaux!=NULL; ptaux=ptaux->prox, contador++) {
-            printf("PROCESSO %d - Size(paginas) = %d - Estado = %d\n", 
+            printf("PROCESSO %d - Size(paginas) = %d - Estado = %d\n",
                 ptaux->pid, ptaux->size, ptaux->estado);
             for(i = 0; i < ptaux->size; i++) {
                 printf("Página Acessos(R/W) NroPageFault NroSubst Local\n");
-                printf("%-7d %12d %12d %8d %5c\n", 
-                    ptaux->paginas[i].pagina, 
-                    ptaux->paginas[i].acessos, 
-                    ptaux->paginas[i].nroPageFault, 
-                    ptaux->paginas[i].nroSubst, 
+                printf("%-7d %12d %12d %8d %5c\n",
+                    ptaux->paginas[i].pagina,
+                    ptaux->paginas[i].acessos,
+                    ptaux->paginas[i].nroPageFault,
+                    ptaux->paginas[i].nroSubst,
                     ptaux->paginas[i].local);
             }
             printf("\n");
@@ -242,29 +242,29 @@ void imprimeArquivo(char nome_arquivo[], process* l)
     process* ptaux;
     int i;
     int result;
-    
-    arq = fopen(nome_arquivo, "wt") // abre para escrita de arquivo texto
-    if (arq != NULL) { 
+
+    arq = fopen(nome_arquivo, "wt"); // abre para escrita de arquivo texto
+    if (arq != NULL) {
         if (l != NULL) {
             for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
-                result = fprintf(arq, "PROCESSO %d\n", 
+                result = fprintf(arq, "PROCESSO %d\n",
                     ptaux->pid, ptaux->size, ptaux->estado);
                 if(result == EOF) {
                     printf("\nERRO: Não foi possível gravar no arquivo de LOG (1).\n");
                     break;
                 }
-                
+
                 for(i = 0; i < ptaux->size; i++) {
                     result = fprintf(arq, "Página Acessos(R/W) NroPageFault NroSubst\n");
                     if(result == EOF) {
                         printf("\nERRO: Não foi possível gravar no arquivo de LOG (2).\n");
                         break;
                     }
-                    
-                    result = fprintf(arq, "%-7d %12d %12d %8d\n", 
-                        ptaux->paginas[i].pagina, 
-                        ptaux->paginas[i].acessos, 
-                        ptaux->paginas[i].nroPageFault, 
+
+                    result = fprintf(arq, "%-7d %12d %12d %8d\n",
+                        ptaux->paginas[i].pagina,
+                        ptaux->paginas[i].acessos,
+                        ptaux->paginas[i].nroPageFault,
                         ptaux->paginas[i].nroSubst);
                     if(result == EOF) {
                         printf("\nERRO: Não foi possível gravar no arquivo de LOG (3).\n");

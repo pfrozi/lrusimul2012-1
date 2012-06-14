@@ -1,14 +1,11 @@
 #define DISPONIVEL -1
+#define ARQ_LOG    "../perf/log.txt"
 
-#define ARQ_LOG "../perf/log.txt"
-
-typedef enum enumComandos {
-    MEMSIZE,
-    PROCSIZE,
-    READ,
-    WRITE,
-    ENDPROC
-} enumComandos;
+#define MEMSIZE     1
+#define PROCSIZE    2
+#define READ        3
+#define WRITE       4
+#define ENDPROC     5
 
 // Estrutura para os elementos do vetor memoria, com quadro igual a indice
 typedef struct tmemoria {
