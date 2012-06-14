@@ -3,14 +3,25 @@
 #include "../include/lrusimul.h"
 #include "../include/processos.h"
 
+/*
+    Função: criaLista
+    Parâmetros: Nenhum
+    Descrição: Inicializa a lista de processos
+*/
 process* criaLista(void)
 {
     pid_contador = 0;
     return NULL;
 }
 
-
-process* insere(process *l, int pid, int size)
+/*
+    Função: insere
+    Parâmetros: l(process*), pid(int), size(int)
+    Descrição: Insere um novo processo com o pid e o size especificado na lista 
+               de processos l. Já cria as respectivas páginas de memória para o
+               processo. As páginas são "carregadas" inicialmente no swap.
+*/
+process* insere(process* l, int pid, int size)
 {
     process* novo; //novo elemento
     process* ant = NULL; //ponteiro auxiliar para a posição anterior
@@ -60,7 +71,11 @@ process* insere(process *l, int pid, int size)
     return l;
 }
 
-
+/*
+    Função: remove
+    Parâmetros: l(process*), pid(int)
+    Descrição: Remove da lista de processos l o processo com o pid especificado.
+*/
 process* remove(process* l, int pid)
 {
     process *ant = NULL; //ponteiro auxiliar para a posição anterior
@@ -81,20 +96,97 @@ process* remove(process* l, int pid)
         l = ptaux->prox;
     else /*vai remover do meio ou do final*/
         ant->prox = ptaux->prox;
-      
-    free(ptaux); /*libera a memória alocada*/
+    
+    // libera a memória alocada
+    free(ptaux->paginas);
+    free(ptaux); 
 
     pid_contador--; // decrementa o total de processos na lista
     
     return l;
 }  
  
+/*
+    Função: consulta
+    Parâmetros: l(process*), pid(int)
+    Retorno: O processo pid ou NULL se não encontrar
+    Descrição: Consulta o processo identificado pelo pid na lista de processos l.
+*/
+process* consulta(process* l, int pid)
+{
+    process *ant = NULL; //ponteiro auxiliar para a posição anterior
+    process *ptaux = l;  //ponteiro auxiliar para percorrer a lista
+
+    /*procura o elemento na lista*/
+    while (ptaux !=NULL && (ptaux->pid != pid))
+    {          
+        ant = ptaux;
+        ptaux = ptaux->prox;
+    }
+    
+    return ptaux;
+}  
+
+/*
+    Função: existe
+    Parâmetros: l(process*), pid(int)
+    Retorno: 1, se o processo está na lista l; 0, caso contrário
+    Descrição: Verifica se o processo identificado pelo pid existe na lista de 
+               processos l.
+*/
+int existe(process* l, int pid)
+{
+    process *ptaux = NULL; //ponteiro o processo
+    
+    ptaux = consulta(l, pid);
+    
+    /*verifica se achou*/
+    if(ptaux != NULL)
+        return 1;
+    else
+        return 0;
+}  
+ 
+/*
+    Função: existePagina
+    Parâmetros: l(process*), pid(int), page(int)
+    Retorno: 1, se existe a página solicitada no processo pid; 
+             0, caso contrário
+    Descrição: Verifica se o processo identificado pelo pid, que está na lista 
+               l, possui a página solicitada.
+*/
+int existePagina(process* l, int pid, int page)
+{
+    process *ptaux = NULL; //ponteiro o processo
+    
+    ptaux = consulta(l, pid);
+    
+    // Verifica se acho o processo
+    if(ptaux != NULL) {
+        /* Verifica se a página existe, como são sequenciais, basta verificar se 
+           é menor que o tamanho do processo em páginas (size) */
+        if(page < ptaux->size) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+}  
+ 
+/*
+    Função: destroi
+    Parâmetros: l(process*)
+    Descrição: Remove todos os processos da lista.
+*/
 process* destroi(process* l)
 {
     process *ptaux; //ponteiro auxiliar para percorrer a lista
     while (l != NULL) {
         ptaux = l;
         l = l->prox;
+        free(ptaux->paginas);
         free(ptaux);
     }
     free(l);
@@ -104,6 +196,12 @@ process* destroi(process* l)
     return NULL;            
 }
 
+/*
+    Função: imprimeCrescente
+    Parâmetros: l(process*)
+    Descrição: Mostra na tela a listagem de processos com algumas informações 
+               além da especificação.
+*/
 void imprimeCrescente(process* l)
 {  
     process* ptaux;
@@ -132,18 +230,24 @@ void imprimeCrescente(process* l)
     }
 }
 
-void imprimeArquivo(char* nome_arquivo, process* l)
+/*
+    Função: imprimeArquivo
+    Parâmetros: nome_arquivo (char[]), l(process*)
+    Descrição: Grava no arquivo nome_arquivo a listagem de processos conforme a
+               especificação.
+*/
+void imprimeArquivo(char nome_arquivo[], process* l)
 {
-    FILE* arq_log;
+    FILE* arq;
     process* ptaux;
     int i;
     int result;
     
-    arq_log = fopen(nome_arquivo, "wt") // abre para escrita de arquivo texto
-    if (arq_log != NULL) { 
+    arq = fopen(nome_arquivo, "wt") // abre para escrita de arquivo texto
+    if (arq != NULL) { 
         if (l != NULL) {
             for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
-                result = fprintf(arq_log, "PROCESSO %d\n", 
+                result = fprintf(arq, "PROCESSO %d\n", 
                     ptaux->pid, ptaux->size, ptaux->estado);
                 if(result == EOF) {
                     printf("\nERRO: Não foi possível gravar no arquivo de LOG (1).\n");
@@ -151,13 +255,13 @@ void imprimeArquivo(char* nome_arquivo, process* l)
                 }
                 
                 for(i = 0; i < ptaux->size; i++) {
-                    result = fprintf(arq_log, "Página Acessos(R/W) NroPageFault NroSubst\n");
+                    result = fprintf(arq, "Página Acessos(R/W) NroPageFault NroSubst\n");
                     if(result == EOF) {
                         printf("\nERRO: Não foi possível gravar no arquivo de LOG (2).\n");
                         break;
                     }
                     
-                    result = fprintf(arq_log, "%-7d %12d %12d %8d\n", 
+                    result = fprintf(arq, "%-7d %12d %12d %8d\n", 
                         ptaux->paginas[i].pagina, 
                         ptaux->paginas[i].acessos, 
                         ptaux->paginas[i].nroPageFault, 
@@ -167,7 +271,7 @@ void imprimeArquivo(char* nome_arquivo, process* l)
                         break;
                     }
                 }
-                result = fprintf(arq_log, "\n");
+                result = fprintf(arq, "\n");
                 if(result == EOF) {
                     printf("\nERRO: Não foi possível gravar no arquivo de LOG (4).\n");
                     break;
@@ -176,7 +280,7 @@ void imprimeArquivo(char* nome_arquivo, process* l)
         } else {
             printf("\nERRO: A lista de processos está vazia.\n");
         }
-        fclose(arq_log);
+        fclose(arq);
     } else {
         printf("\nERRO: Não foi possível criar o arquivo de LOG.\n");
     }

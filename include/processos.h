@@ -13,9 +13,8 @@ typedef struct page {
 
 typedef struct process {
     int         pid;
-    int         size;
+    int         size; // Quantidade de páginas
     int         estado;
-    int         quant_pages;
     page*       paginas;
     process*    prox;
 } process;
@@ -25,6 +24,9 @@ process* criaLista(void);
 process* insere(process *l, int pid, int size);
 process* remove(process* l, int pid);
 process* destroi(process* l);
+process* consulta(process* l, int pid);
+int existe(process* l, int pid);
+int existePagina(process* l, int pid, int page);
 
 void imprimeCrescente(process* l);
 void imprimeArquivo(char* nome_arquivo, process* l);
