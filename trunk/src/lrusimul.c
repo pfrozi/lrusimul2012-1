@@ -4,11 +4,15 @@
 #include "../include/lrusimul.h"
 #include "../include/processos.h"
 
+
+
+/*   Funções internas - INICIO     */
+// vars globais
+int         clockPointer;
 int         quant_frames;
 tmemoria*   Memoria;
 process*    Processos;
 
-/*   Funções internas - INICIO     */
 /*
     Função: criaMemoria
     Parâmetros: n(int)
@@ -41,6 +45,7 @@ tmemoria* criaMemoria(int n)
 */
 void memSize(int size)
 {
+    clockPointer = 0;
     quant_frames = size;
     Memoria = criaMemoria(size);        // memoria
     Processos = criaLista();           // area de swap, onde os processos são inicializados
@@ -111,7 +116,7 @@ void Read(int pagina, int id)
             else
             {
 
-                LRUclock(Memoria,&pid_vitima,&pag_vitima,&frame);
+                trataPageFault(Memoria,&pid_vitima,&pag_vitima,&frame);
 
                 vitProcess = consulta(Processos, pid_vitima);
                 auxProcess->paginas[pagina].nroPageFault++;
@@ -179,7 +184,7 @@ void Write(int pagina, int id)
             else
             {
 
-                LRUclock(Memoria,&pid_vitima,&pag_vitima,&frame);
+                trataPageFault(Memoria,&pid_vitima,&pag_vitima,&frame);
 
                 vitProcess = consulta(Processos, pid_vitima);
                 auxProcess->paginas[pagina].nroPageFault++;
@@ -243,6 +248,37 @@ void corta(char string[])
 */
 void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame)
 {
+    int cont = 0;
+    int ini  = clockPointer;
+
+    do{
+        if(ini == clockPointer)
+            cont++;
+        if (((Memoria[clockPointer].bitRef == 0) && (Memoria[clockPointer].bitSujo == 0))
+            || ((cont==3) && (Memoria[clockPointer].bitRef == 0))){
+            *pid_vitima = Memoria[clockPointer].pid;
+            *pag_vitima = Memoria[clockPointer].pagina;
+            *frame = clockPointer;
+            break;
+        }
+
+        Memoria[clockPointer].bitRef = 0;
+        clockPointer = (clockPointer + 1) % quant_frames;
+
+    }while(!(cont>3));
+
+
+    clockPointer = (clockPointer + 1) % quant_frames;
+
+}
+
+/*
+    Função: trataPageFault
+    Parâmetros: Nenhum
+    Descrição: Trata PageFault
+*/
+void trataPageFault(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame)
+{
     int i;
 
     *pid_vitima = -1;
@@ -257,25 +293,8 @@ void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame)
             return;                         //encontrou frame livre
         }
     }
-    for(i = 0;i<quant_frames * 2;i++)
-    {
-        if ((Memoria[i % quant_frames].bitRef == 0) && (Memoria[i % quant_frames].bitSujo == 0)){
-            *pid_vitima = Memoria[i % quant_frames].pid;
-            *pag_vitima = Memoria[i % quant_frames].pagina;
-            *frame = i % quant_frames;
-            return;
-        }
-        Memoria[i].bitRef = 0;
-    }
-    for(i = 0;i<quant_frames;i++)
-    {
-        if ((Memoria[i].bitRef == 0) && (Memoria[i].bitSujo == 1)){
-            *pid_vitima = Memoria[i].pid;
-            *pag_vitima = Memoria[i].pagina;
-            *frame = i;
-            return;
-        }
-    }
+    // Não encontrou, chama LRUclock
+    LRUclock(Memoria,pid_vitima,pag_vitima,frame);
 
 }
 

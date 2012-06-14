@@ -30,34 +30,38 @@ int main(int argc, char *argv[])
     strcpy(comando,strtok(linha," \t"));
 
     // Verifica se o primeiro comando é MEMSIZE
-    if(strcmp(comando,"MEMSIZE") < 0){
+    if(strcmp("MEMSIZE",comando) < 0){
         printf("\nERRO: Vece não definiu a quantidade de quadros da memoria. O primeiro comando do arquivo deve ser MEMSIZE.\n");
         return -2;
     }
-    strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do MEMSIZE
+    strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do MEMSIZE
     corta(parametros[0]);
 
     // inicializa memoria
-    memSize(atoi(parametros[0]));
+    printf("Comando: MEMSIZE\nParametros: %s\n\n"
+                        ,parametros[0]);
+    //memSize(atoi(parametros[0]));
 
     // le o resto do arquivo
     while(!feof(pFile)){
 
         // verifica o comando
+        fflush(pFile);
         fgets(linha,sizeof(linha),pFile);
         strcpy(comando,strtok(linha," \t"));
 
-        if(!(strcmp(comando,"MEMSIZE") < 0)){
+        if(!(strcmp("MEMSIZE",comando) < 0)){
             printf("\nERRO: Vece não pode definir a quantidade de quadros da memoria 2 vezes.\n");
             return -3;
         }
-        if(!(strcmp(comando,"PROCSIZE") < 0))
+
+        if(!(strcmp("PROCSIZE",comando) < 0))
             enumComando = PROCSIZE;
-        else if(!(strcmp(comando,"READ") < 0))
+        else if(!(strcmp("READ",comando) < 0))
             enumComando = READ;
-        else if(!(strcmp(comando,"WRITE") < 0))
+        else if(!(strcmp("WRITE",comando) < 0))
             enumComando = WRITE;
-        else if(!(strcmp(comando,"ENDPROC") < 0))
+        else if(!(strcmp("ENDPROC",comando) < 0))
             enumComando = ENDPROC;
         else { // ERRO
             printf("\nERRO: Comando inválido: %s.\n", comando);
@@ -67,40 +71,55 @@ int main(int argc, char *argv[])
         {
             case PROCSIZE:
             {
-                strcpy(parametros[0],strtok(linha," \t"));     // extrai o parâmetro 1 do READ
-                strcpy(parametros[1],strtok(linha," \t"));     // extrai o parâmetro 2 do READ
+                strcpy(parametros[0],strtok(NULL," \t"));     // extrai o parâmetro 1 do READ
+                strcpy(parametros[1],strtok(NULL," \t"));     // extrai o parâmetro 2 do READ
                 corta(parametros[1]);
 
-                procSize(atoi(parametros[0]),atoi(parametros[1]));
+                printf("Comando: PROCSIZE\nParametros: %s\t %s\n\n"
+                        ,parametros[0]
+                        ,parametros[1]);
+
+                //procSize(atoi(parametros[0]),atoi(parametros[1]));
 
                 break;
             }
             case READ:
             {
-                strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do READ
-                strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do READ
+                strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do READ
+                strcpy(parametros[1],strtok(NULL," \t"));    // extrai o parâmetro 2 do READ
                 corta(parametros[1]);
 
-                Read(atoi(parametros[0]),atoi(parametros[1]));
+                printf("Comando: READ\nParametros: %s\t %s\n\n"
+                        ,parametros[0]
+                        ,parametros[1]);
+
+                //Read(atoi(parametros[0]),atoi(parametros[1]));
 
                 break;
             }
             case WRITE:
             {
-                strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do WRITE
-                strcpy(parametros[1],strtok(linha," \t"));    // extrai o parâmetro 2 do WRITE
+                strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do WRITE
+                strcpy(parametros[1],strtok(NULL," \t"));    // extrai o parâmetro 2 do WRITE
                 corta(parametros[1]);
 
-                Write(atoi(parametros[0]),atoi(parametros[1]));
+                printf("Comando: WRITE\nParametros: %s\t %s\n\n"
+                        ,parametros[0]
+                        ,parametros[1]);
+
+                //Write(atoi(parametros[0]),atoi(parametros[1]));
 
                 break;
             }
             case ENDPROC:
             {
-                strcpy(parametros[0],strtok(linha," \t"));    // extrai o parâmetro 1 do ENDPROC
+                strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do ENDPROC
                 corta(parametros[0]);
 
-                endProc(atoi(parametros[0]));
+                printf("Comando: ENDPROC\nParametros: %s\n\n"
+                        ,parametros[0]);
+
+                //endProc(atoi(parametros[0]));
 
                 break;
             }
