@@ -9,10 +9,10 @@
 
 // Estrutura para os elementos do vetor memoria, com quadro igual a indice
 typedef struct tmemoria {
-    int  pid;
-    int  pagina;
-    int  bitRef;
-    int  bitSujo;
+    int  pid;     // PID do Processo cuja página ocupa a célula da memória
+    int  pagina;  // Página do processo que está ocupando a célula
+    int  bitRef;  // Bit de Referência, indica se a página foi ou não acessada recentemente
+    int  bitSujo; // Bit de Sujo, indica se a página foi alterada recentemente
 } tmemoria;
 
 // procedimentos e funções de leitura do arquivo
