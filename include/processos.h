@@ -3,7 +3,7 @@
 
 #include "../include/lrusimul.h"
 
-typedef struct process{
+typedef struct process {
     int         pid;
     int         size;
     int         estado;
@@ -15,7 +15,7 @@ int pid_contador;
  
 // procedimentos e funções da lista de processos
 process* cria_lista(void);
-process* insere(process *l, int pid, int size, int page* paginas);
+process* insere(process *l, int pid, int size);
 process* remove(process* l, int pid);
 void imprimeCrescente(process* l);
 process* destroi(process* l);
