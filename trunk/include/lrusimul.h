@@ -26,7 +26,7 @@ void Write(int pagina, int id);
 void endProc(int id);
 
 // algoritmo LRU segunda chace modificado
-void LRUclock(tmemoria* Memoria,int vitima[]);
+void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame);
 
 // procedimento de criação do relatório
 void mostraRelatorio();
