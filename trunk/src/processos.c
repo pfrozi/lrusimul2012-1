@@ -132,14 +132,14 @@ void imprimeCrescente(process* l)
     }
 }
 
-void gravaLOG(process* l)
+void imprimeArquivo(char* nome_arquivo, process* l)
 {
     FILE* arq_log;
     process* ptaux;
     int i;
     int result;
     
-    arq_log = fopen(ARQ_LOG,"wt") // abre para escrita de arquivo texto
+    arq_log = fopen(nome_arquivo, "wt") // abre para escrita de arquivo texto
     if (arq_log != NULL) { 
         if (l != NULL) {
             for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
