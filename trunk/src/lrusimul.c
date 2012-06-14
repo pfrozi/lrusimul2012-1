@@ -9,7 +9,7 @@ process*    Processos;
 /*   Funções internas - INICIO     */
 /*
     Função: criaMemoria
-    Parâmetros: n(inteiro)
+    Parâmetros: n(int)
     Descrição: Cria vetor que representa a memória física (RAM) com n quadros. Retorna um ponteiro para o vetor.
 */
 tmemoria* criaMemoria(int n)
@@ -34,7 +34,7 @@ tmemoria* criaMemoria(int n)
 /*      Funções internas - FIM     */
 /*
     Função: memSize
-    Parâmetros: size(inteiro)
+    Parâmetros: size(int)
     Descrição: Define o tamanho da memória física (RAM) em size quadros.
 */
 void memSize(int size)
@@ -46,14 +46,14 @@ void memSize(int size)
 
 /*
     Função: procSize
-    Parâmetros: id(inteiro), size(inteiro)
+    Parâmetros: id(int), size(int)
     Descrição: Cria processo identificado por id com size páginas. Considerase
                 que essa criação coloca todas as páginas do processo no swap
                 e não na memória RAM.
 */
 void procSize(int id, int size)
 {
-    if (existe_processo(Processos, id))
+    if (existe(Processos, id))
         printf("Processo %d jah existe e não pode ser criado\n");
     else
         insere(Processos, id, size);
@@ -61,7 +61,7 @@ void procSize(int id, int size)
 
 /*
     Função: Read
-    Parâmetros: page(inteiro), id(inteiro)
+    Parâmetros: page(int), id(int)
     Descrição: Realiza a leitura de uma posição de memória da página page
                 do processo id. Se a página não estiver na memória, ela deve
                 ser carregada. Se não houver quadros livres, o algoritmo LRU
@@ -128,7 +128,7 @@ void Read(int pagina, int id)
 
 /*
     Função: Write
-    Parâmetros: page(inteiro), id(inteiro)
+    Parâmetros: page(int), id(int)
     Descrição: Realiza a escrita em uma posição de memória na página page
                 do processo id. Se a página não estiver na memória, ela deve
                 ser carregada. Se não houver quadros livres, o algoritmo LRU
@@ -218,7 +218,7 @@ void corta(char string[])
 
 /*
     Função: LRUclock
-    Parâmetros: Memoria(tmemoria*) vitima(int[])
+    Parâmetros: Memoria(tmemoria*), vitima(int[]), frame(int*)
     Descrição: 
 */
 void LRUclock(tmemoria* Memoria,int vitima[],int* frame)
