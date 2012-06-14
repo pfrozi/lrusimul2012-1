@@ -10,33 +10,46 @@ process* cria_lista(void)
 }
 
 
-process* insere(process *l, int pid, int size, int page* paginas)
+process* insere(process *l, int pid, int size)
 {
-    process *novo; //novo elemento
-    process *ant = NULL; //ponteiro auxiliar para a posição anterior
-    process *ptaux = l; //ponteiro auxiliar para percorrer a lista
-    process *ptLista = l;
-     
+    process* novo; //novo elemento
+    process* ant = NULL; //ponteiro auxiliar para a posição anterior
+    process* ptaux = l; //ponteiro auxiliar para percorrer a lista
+    process* ptLista = l;
+    page* paginas; // Ponteiro para as páginas do processo que serão alucadas como uma matriz
+    int i;
+ 
+    /* Gera um array que é um conjunto de páginas para o processo */
+    paginas = (page*) malloc((sizeof(page) * size));
+    for(i = 0; i < size; i++) {
+        paginas[i].pagina = i;
+        paginas[i].acessos = 0;
+        paginas[i].nroPageFault = 0;
+        paginas[i].nroSubst = 0;
+        paginas[i].local = 'S';
+    }
+ 
+    /* Gera um novo elemento processo na lista */
     novo = (process*) malloc(sizeof(process));
     novo->pid  = pid;
     novo->size = size;
     novo->estado = INICIALIZADO;
     novo->paginas = paginas;
    
-    /*procurando a posição de inserção*/
+    /* procurando a posição de inserção */
     while ((ptaux!=NULL) && (ptaux->pid < pid)) 
     {
         ant = ptaux;
         ptaux = ptaux->prox;
     }
 
-    /*encaeia o elemento*/
+    /* encaeia o elemento */
     if (ant == NULL) /*o anterior não existe, logo o elemento será inserido na primeira posição*/
     {
         novo->prox = l;
         l = novo;
     }
-    else /*elemento inserido no meio da lista*/
+    else /* elemento inserido no meio da lista */
     {
         novo->prox = ant->prox;
         ant->prox = novo;

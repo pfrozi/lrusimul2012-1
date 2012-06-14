@@ -1,14 +1,14 @@
 #define DISPONIVEL -1
 #define ARQ_LOG "../perf/log.txt"
 
-typedef struct LRUclock{
+typedef struct LRUclock {
     int  pid;
     int  pagina;
     int  bitRef;
     int  bitSujo;
 } LRUclock;
 
-typedef enum enumComandos{
+typedef enum enumComandos {
     MEMSIZE,
     PROCSIZE,
     READ,
@@ -17,14 +17,14 @@ typedef enum enumComandos{
 }enumComandos;
 
 // Estrutura para os elementos do vetor memoria, com quadro igual a indice
-typedef struct tmemoria{
+typedef struct tmemoria {
     int  pid;
     int  pagina;
     int  bitRef;
     int  bitSujo;
 } tmemoria;
 
-typedef struct page{
+typedef struct page {
     int  pagina;
     int  acessos;
     int  nroPageFault;   // será no mínimo 1, quando a página é lida pela primeira vez
