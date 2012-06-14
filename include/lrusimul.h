@@ -1,12 +1,14 @@
 #define DISPONIVEL -1
 
+#define ARQ_LOG "../perf/log.txt"
+
 typedef enum enumComandos {
     MEMSIZE,
     PROCSIZE,
     READ,
     WRITE,
     ENDPROC
-}enumComandos;
+} enumComandos;
 
 // Estrutura para os elementos do vetor memoria, com quadro igual a indice
 typedef struct tmemoria {
@@ -15,15 +17,6 @@ typedef struct tmemoria {
     int  bitRef;
     int  bitSujo;
 } tmemoria;
-
-typedef struct page {
-    int  pagina;
-    int  acessos;
-    int  nroPageFault;   // será no mínimo 1, quando a página é lida pela primeira vez
-    int  nroSubst;       // Quantas vezes esta página foi escolhida como "vítima", caso não existam mais páginas disponíveis na memória RAM
-    char local;          // Indica se a página está na memória 'M' ou no swap 'S', quando o processo é criado todas as páginas estão no swap
-} page;
-
 
 // procedimentos e funções de leitura do arquivo
 void memSize(int size);
@@ -36,7 +29,8 @@ void endProc(int id);
 void LRUclock(tmemoria* Memoria,int vitima[]);
 
 // procedimento de criação do relatório
-void criaRelatorio();
+void mostraRelatorio();
+void gravaRelatorio();
 
 // procedimentos e funções auxiliares utilizados
 void corta(char string[]);

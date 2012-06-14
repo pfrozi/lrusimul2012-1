@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "../include/lrusimul.h"
 
-
 int main(int argc, char *argv[])
 {
     
@@ -106,6 +105,10 @@ int main(int argc, char *argv[])
             }
         }
     }
+    
+    // Grava o arquivo de LOG
+    mostraRelatorio();
+    gravaRelatorio();
 }
 
 

@@ -215,6 +215,7 @@ void corta(char string[])
     if(string[strlen(string)-1]=='\n')
        string[strlen(string)-1] ='\0';
 }
+
 /*
     Função: LRUclock
     Parâmetros: Memoria(tmemoria*) vitima(int[])
@@ -257,11 +258,27 @@ void LRUclock(tmemoria* Memoria,int vitima[],int* frame)
     }
     
 }
+
 /*
-    Função: 
-    Parâmetros: 
-    Descrição: 
+    Função: mostraRelatorio();
+    Parâmetros: Nenhum
+    Descrição: Mostra o Relatório de Processos com as páginas e os acessos à 
+               memória na tela, usa a função imprimeCrescente().
 */
+void mostraRelatorio() {
+    imprimeCrescente(Processos);
+}
+
+/*
+    Função: gravaRelatorio();
+    Parâmetros: Nenhum
+    Descrição: Grava o arquivo de LOG no local definido por ARQ_LOG. O arquivo 
+               contém o Relatório de Processos com as páginas e os acessos à 
+               memória, usa a função imprimeArquivo().
+*/
+void gravaRelatorio() {
+    imprimeArquivo(ARQ_LOG, Processos);
+}
 
 /*
     Função: 
