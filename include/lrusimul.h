@@ -1,12 +1,5 @@
 #define DISPONIVEL -1
 
-typedef struct LRUclock {
-    int  pid;
-    int  pagina;
-    int  bitRef;
-    int  bitSujo;
-} LRUclock;
-
 typedef enum enumComandos {
     MEMSIZE,
     PROCSIZE,
@@ -35,12 +28,16 @@ typedef struct page {
 // procedimentos e funções de leitura do arquivo
 void memSize(int size);
 void procSize(int id, int size);
-void Read(int id, int size);
-void Write(int id, int size);
+void Read(int pagina, int id);
+void Write(int pagina, int id);
 void endProc(int id);
+
+// algoritmo LRU segunda chace modificado
+void LRUclock(tmemoria* Memoria,int vitima[]);
 
 // procedimento de criação do relatório
 void criaRelatorio();
 
 // procedimentos e funções auxiliares utilizados
 void corta(char string[]);
+
