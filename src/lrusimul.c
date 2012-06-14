@@ -73,6 +73,9 @@ void Read(int pagina, int id)
     int i;
     
     int frame;
+    
+    int pid_vitima,pag_vitima;
+    
     int pageFault = 1;
     process* auxProcess;
     
@@ -107,9 +110,9 @@ void Read(int pagina, int id)
             else
             {
                 
-                LRUclock(Memoria,vitima,&frame);
+                LRUclock(Memoria,&pid_vitima,&pag_vitima,&frame);
                 
-                vitProcess = consultaProcesso(Memoria, vitima[0]);
+                vitProcess = consultaProcesso(Processos, pid_vitima);
                 auxProcess->paginas[pagina]->nroPageFault++;
                 auxProcess->paginas[pagina]->acessos++;
                 auxProcess->paginas[pagina]->local = 'M';
@@ -118,8 +121,8 @@ void Read(int pagina, int id)
                 Memoria[frame].bitRef = 1;
                 Memoria[frame].bitSujo = 0;
                 
-                vitProcess->paginas[vitima[1]]->nroSubst++;
-                vitProcess->paginas[vitima[1]]->local = 'S';
+                vitProcess->paginas[pag_vitima]->nroSubst++;
+                vitProcess->paginas[pag_vitima]->local = 'S';
             }
             break;
         }
@@ -143,7 +146,7 @@ void Write(int pagina, int id)
     int pageFault = 1;
     process* auxProcess;
     
-    int vitima[2];
+    int pid_vitima,pag_vitima;
     process* vitProcess;
     
     for(i = 0;i<quant_frames;i++){
@@ -175,9 +178,9 @@ void Write(int pagina, int id)
             else
             {
                 
-                LRUclock(Memoria,vitima,&frame);
+                LRUclock(Memoria,&pid_vitima,&pag_vitima,&frame);
                 
-                vitProcess = consultaProcesso(Memoria, vitima[0]);
+                vitProcess = consultaProcesso(Processos, pid_vitima);
                 auxProcess->paginas[pagina]->nroPageFault++;
                 auxProcess->paginas[pagina]->acessos++;
                 auxProcess->paginas[pagina]->local = 'M';
@@ -186,8 +189,8 @@ void Write(int pagina, int id)
                 Memoria[frame].bitRef = 1;
                 Memoria[frame].bitSujo = 1;
                 
-                vitProcess->paginas[vitima[1]]->nroSubst++;
-                vitProcess->paginas[vitima[1]]->local = 'S';
+                vitProcess->paginas[pag_vitima]->nroSubst++;
+                vitProcess->paginas[pag_vitima]->local = 'S';
             }
             break;
         }
@@ -202,7 +205,24 @@ void Write(int pagina, int id)
 */
 void endProc(int id)
 {
-
+    
+    // libera processo no swap
+    process* auxProcess;
+    
+    if (existe(Processos, id)){
+        printf("Processo %d nao existe logo nao pode ser finalizado!\n");
+        return;
+    }
+    auxProcess = consultaProcesso(Processos, id);
+    auxProcess->estado = ENCERRADO;
+    
+    // libera todos os quadros alocados a este processo
+    for(i = 0;i<quant_frames;i++)
+    {
+        if (Memoria[i].pid == id)
+            Memoria[i].pid = DISPONIVEL;
+        }
+    }
 }
 
 /*
@@ -221,12 +241,12 @@ void corta(char string[])
     Parâmetros: Memoria(tmemoria*), vitima(int[]), frame(int*)
     Descrição: 
 */
-void LRUclock(tmemoria* Memoria,int vitima[],int* frame)
+void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame)
 {
     int i;
     
-    vitima[0] = -1;
-    vitima[1] = -1;
+    pid_vitima = -1;
+    pag_vitima = -1;
     frame = -1;
     
     //procura um quadro livre
@@ -240,8 +260,8 @@ void LRUclock(tmemoria* Memoria,int vitima[],int* frame)
     for(i = 0;i<quant_frames * 2;i++)
     {
         if ((Memoria[i % quant_frames].bitRef == 0) && (Memoria[i % quant_frames].bitSujo == 0)){
-            vitima[0] = Memoria[i].pid;
-            vitima[1] = Memoria[i].pagina;
+            pid_vitima = Memoria[i % quant_frames].pid;
+            pag_vitima = Memoria[i % quant_frames].pagina;
             frame = i % quant_frames;
             return;
         }
@@ -250,8 +270,8 @@ void LRUclock(tmemoria* Memoria,int vitima[],int* frame)
     for(i = 0;i<quant_frames;i++)
     {
         if ((Memoria[i].bitRef == 0) && (Memoria[i].bitSujo == 1)){
-            vitima[0] = Memoria[i].pid;
-            vitima[1] = Memoria[i].pagina;
+            pid_vitima = Memoria[i].pid;
+            pag_vitima = Memoria[i].pagina;
             frame = i;
             return;
         }
