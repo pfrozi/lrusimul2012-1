@@ -61,9 +61,9 @@ void memSize(int size)
 void procSize(int id, int size)
 {
     if (existe(Processos, id))
-        printf("Processo %d jah existe e não pode ser criado\n",id);
+        printf("Processo %d jah existe e nao pode ser criado\n",id);
     else
-        insere(Processos, id, size);
+        Processos = insere(Processos, id, size);
 }
 
 /*
