@@ -1,7 +1,6 @@
 #define INICIALIZADO   1
 #define ENCERRADO      0
 
-#include "../include/lrusimul.h"
 
 typedef struct page {
     int  pagina;
@@ -16,13 +15,15 @@ typedef struct process {
     int         size; // Quantidade de páginas
     int         estado;
     page*       paginas;
-    process*    prox;
+    struct process*    prox;
 } process;
-  
+
+int pid_contador;
+
 // procedimentos e funções da lista de processos
 process* criaLista(void);
 process* insere(process *l, int pid, int size);
-process* remove(process* l, int pid);
+process* removeProc(process* l, int pid);
 process* destroi(process* l);
 process* consulta(process* l, int pid);
 int existe(process* l, int pid);
