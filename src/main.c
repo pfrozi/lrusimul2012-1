@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
                         ,parametros[0]
                         ,parametros[1]);
 
-                //procSize(atoi(parametros[0]),atoi(parametros[1]));
+                procSize(atoi(parametros[0]),atoi(parametros[1]));
 
                 break;
             }

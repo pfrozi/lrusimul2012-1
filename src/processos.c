@@ -26,7 +26,6 @@ process* insere(process* l, int pid, int size)
     process* novo; //novo elemento
     process* ant = NULL; //ponteiro auxiliar para a posição anterior
     process* ptaux = l; //ponteiro auxiliar para percorrer a lista
-    process* ptLista = l;
     page* paginas; // Ponteiro para as páginas do processo que serão alucadas como uma matriz
     int i;
 
@@ -214,7 +213,7 @@ void imprimeCrescente(process* l)
             printf("PROCESSO %d - Size(paginas) = %d - Estado = %d\n",
                 ptaux->pid, ptaux->size, ptaux->estado);
             for(i = 0; i < ptaux->size; i++) {
-                printf("Página Acessos(R/W) NroPageFault NroSubst Local\n");
+                printf("Pagina Acessos(R/W) NroPageFault NroSubst Local\n");
                 printf("%-7d %12d %12d %8d %5c\n",
                     ptaux->paginas[i].pagina,
                     ptaux->paginas[i].acessos,
@@ -226,7 +225,7 @@ void imprimeCrescente(process* l)
         }
         printf("\nRECONTAGEM DE PROCESSOS = %d\n", contador);
     } else {
-        printf("\nERRO: A lista de processos está vazia.\n");
+        printf("\nERRO: A lista de processos esta vazia.\n");
     }
 }
 
@@ -248,16 +247,16 @@ void imprimeArquivo(char nome_arquivo[], process* l)
         if (l != NULL) {
             for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
                 result = fprintf(arq, "PROCESSO %d\n",
-                    ptaux->pid, ptaux->size, ptaux->estado);
+                                ptaux->pid);
                 if(result == EOF) {
-                    printf("\nERRO: Não foi possível gravar no arquivo de LOG (1).\n");
+                    printf("\nERRO: Não foi possivel gravar no arquivo de LOG (1).\n");
                     break;
                 }
 
                 for(i = 0; i < ptaux->size; i++) {
-                    result = fprintf(arq, "Página Acessos(R/W) NroPageFault NroSubst\n");
+                    result = fprintf(arq, "Pagina Acessos(R/W) NroPageFault NroSubst\n");
                     if(result == EOF) {
-                        printf("\nERRO: Não foi possível gravar no arquivo de LOG (2).\n");
+                        printf("\nERRO: Não foi possivel gravar no arquivo de LOG (2).\n");
                         break;
                     }
 
@@ -267,21 +266,21 @@ void imprimeArquivo(char nome_arquivo[], process* l)
                         ptaux->paginas[i].nroPageFault,
                         ptaux->paginas[i].nroSubst);
                     if(result == EOF) {
-                        printf("\nERRO: Não foi possível gravar no arquivo de LOG (3).\n");
+                        printf("\nERRO: Não foi possivel gravar no arquivo de LOG (3).\n");
                         break;
                     }
                 }
                 result = fprintf(arq, "\n");
                 if(result == EOF) {
-                    printf("\nERRO: Não foi possível gravar no arquivo de LOG (4).\n");
+                    printf("\nERRO: Não foi possivel gravar no arquivo de LOG (4).\n");
                     break;
                 }
             }
         } else {
-            printf("\nERRO: A lista de processos está vazia.\n");
+            printf("\nERRO: A lista de processos esta vazia.\n");
         }
         fclose(arq);
     } else {
-        printf("\nERRO: Não foi possível criar o arquivo de LOG.\n");
+        printf("\nERRO: Não foi possivel criar o arquivo de LOG.\n");
     }
 }
