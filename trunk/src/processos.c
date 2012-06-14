@@ -84,19 +84,6 @@ process* remove(process* l, int pid)
     
     return l;
 }  
-
-void imprimeCrescente(process* l)
-{  
-    process* ptaux;
-    if (l == NULL)
-        puts("lista vazia");
-    else
-        for (ptaux=l; ptaux!=NULL; ptaux=ptaux->prox)
-            printf("PID = %10d Size(paginas) = %10d Estado = %d\n"
-                   , ptaux->pid
-                   , ptaux->size,
-                     ptaux->estado);
-}
  
 process* destroi(process* l)
 {
@@ -109,4 +96,80 @@ process* destroi(process* l)
    }
    free(l);   
    return NULL;            
-}   
+}
+
+void imprimeCrescente(process* l)
+{  
+    process* ptaux;
+    int i;
+    
+    if (l != NULL) {
+        for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
+            printf("PROCESSO %d - Size(paginas) = %d - Estado = %d\n", 
+                ptaux->pid, ptaux->size, ptaux->estado);
+            for(i = 0; i < ptaux->size; i++) {
+                printf("Página Acessos(R/W) NroPageFault NroSubst Local\n");
+                printf("%-7d %12d %12d %8d %5c\n", 
+                    ptaux->paginas[i].pagina, 
+                    ptaux->paginas[i].acessos, 
+                    ptaux->paginas[i].nroPageFault, 
+                    ptaux->paginas[i].nroSubst, 
+                    ptaux->paginas[i].local);
+            }
+            printf("\n");
+        }
+    } else {
+        printf("\nERRO: A lista de processos está vazia.\n");
+    }
+}
+
+void gravaLOG(process* l)
+{
+    FILE* arq_log;
+    process* ptaux;
+    int i;
+    int result;
+    
+    arq_log = fopen(ARQ_LOG,"wt") // abre para escrita de arquivo texto
+    if (arq_log != NULL) { 
+        if (l != NULL) {
+            for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
+                result = fprintf(arq_log, "PROCESSO %d\n", 
+                    ptaux->pid, ptaux->size, ptaux->estado);
+                if(result == EOF) {
+                    printf("\nERRO: Não foi possível gravar no arquivo de LOG (1).\n");
+                    break;
+                }
+                
+                for(i = 0; i < ptaux->size; i++) {
+                    result = fprintf(arq_log, "Página Acessos(R/W) NroPageFault NroSubst\n");
+                    if(result == EOF) {
+                        printf("\nERRO: Não foi possível gravar no arquivo de LOG (2).\n");
+                        break;
+                    }
+                    
+                    result = fprintf(arq_log, "%-7d %12d %12d %8d\n", 
+                        ptaux->paginas[i].pagina, 
+                        ptaux->paginas[i].acessos, 
+                        ptaux->paginas[i].nroPageFault, 
+                        ptaux->paginas[i].nroSubst, 
+                        ptaux->paginas[i].local);
+                    if(result == EOF) {
+                        printf("\nERRO: Não foi possível gravar no arquivo de LOG (2).\n");
+                        break;
+                    }
+                }
+                result = fprintf(arq_log, "\n");
+                if(result == EOF) {
+                    printf("\nERRO: Não foi possível gravar no arquivo de LOG (3).\n");
+                    break;
+                }
+            }
+        } else {
+            printf("\nERRO: A lista de processos está vazia.\n");
+        }
+        fclose(arq_log);
+    } else {
+        printf("\nERRO: Não foi possível criar o arquivo de LOG.\n");
+    }
+}

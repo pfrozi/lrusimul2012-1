@@ -1,5 +1,4 @@
 #define DISPONIVEL -1
-#define ARQ_LOG "../perf/log.txt"
 
 typedef struct LRUclock {
     int  pid;
