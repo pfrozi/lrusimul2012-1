@@ -16,7 +16,7 @@ typedef struct process {
 int pid_contador;
  
 // procedimentos e funções da lista de processos
-process* cria_lista(void);
+process* criaLista(void);
 process* insere(process *l, int pid, int size);
 process* remove(process* l, int pid);
 process* destroi(process* l);

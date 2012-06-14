@@ -3,9 +3,9 @@
 #include "../include/lrusimul.h"
 #include "../include/processos.h"
 
-process* cria_lista(void)
+process* criaLista(void)
 {
-    pid_contador = 1;
+    pid_contador = 0;
     return NULL;
 }
 
@@ -55,6 +55,8 @@ process* insere(process *l, int pid, int size)
         ant->prox = novo;
     }
 
+    pid_contador++; // incrementa o total de processos na lista
+    
     return l;
 }
 
@@ -81,30 +83,36 @@ process* remove(process* l, int pid)
         ant->prox = ptaux->prox;
       
     free(ptaux); /*libera a memória alocada*/
+
+    pid_contador--; // decrementa o total de processos na lista
     
     return l;
 }  
  
 process* destroi(process* l)
 {
-   process *ptaux; //ponteiro auxiliar para percorrer a lista
-   while (l != NULL)
-   {
-         ptaux = l;
-         l = l->prox;
-         free(ptaux);
-   }
-   free(l);   
-   return NULL;            
+    process *ptaux; //ponteiro auxiliar para percorrer a lista
+    while (l != NULL) {
+        ptaux = l;
+        l = l->prox;
+        free(ptaux);
+    }
+    free(l);
+    
+    pid_contador = 0; // zera o total de processos na lista
+
+    return NULL;            
 }
 
 void imprimeCrescente(process* l)
 {  
     process* ptaux;
     int i;
+    int contador;
     
+    printf("TOTAL DE PROCESSOS = %d\n\n", pid_contador);
     if (l != NULL) {
-        for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
+        for(ptaux=l, contador = 0; ptaux!=NULL; ptaux=ptaux->prox, contador++) {
             printf("PROCESSO %d - Size(paginas) = %d - Estado = %d\n", 
                 ptaux->pid, ptaux->size, ptaux->estado);
             for(i = 0; i < ptaux->size; i++) {
@@ -118,6 +126,7 @@ void imprimeCrescente(process* l)
             }
             printf("\n");
         }
+        printf("\nRECONTAGEM DE PROCESSOS = %d\n", contador);
     } else {
         printf("\nERRO: A lista de processos está vazia.\n");
     }
@@ -152,16 +161,15 @@ void gravaLOG(process* l)
                         ptaux->paginas[i].pagina, 
                         ptaux->paginas[i].acessos, 
                         ptaux->paginas[i].nroPageFault, 
-                        ptaux->paginas[i].nroSubst, 
-                        ptaux->paginas[i].local);
+                        ptaux->paginas[i].nroSubst);
                     if(result == EOF) {
-                        printf("\nERRO: Não foi possível gravar no arquivo de LOG (2).\n");
+                        printf("\nERRO: Não foi possível gravar no arquivo de LOG (3).\n");
                         break;
                     }
                 }
                 result = fprintf(arq_log, "\n");
                 if(result == EOF) {
-                    printf("\nERRO: Não foi possível gravar no arquivo de LOG (3).\n");
+                    printf("\nERRO: Não foi possível gravar no arquivo de LOG (4).\n");
                     break;
                 }
             }
