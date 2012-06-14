@@ -15,6 +15,7 @@ typedef struct tmemoria {
     int  bitSujo; // Bit de Sujo, indica se a página foi alterada recentemente
 } tmemoria;
 
+
 // procedimentos e funções de leitura do arquivo
 void memSize(int size);
 void procSize(int id, int size);
@@ -23,6 +24,7 @@ void Write(int pagina, int id);
 void endProc(int id);
 
 // algoritmo LRU segunda chace modificado
+void trataPageFault(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame);
 void LRUclock(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* frame);
 
 // procedimento de criação do relatório
