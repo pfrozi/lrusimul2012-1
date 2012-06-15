@@ -128,6 +128,7 @@ void Read(int pagina, int id)
                 if(pid_vitima!=-1){
                     vitProcess = consulta(Processos, pid_vitima);
                     vitProcess->paginas[pag_vitima].nroSubst++;
+                    printf("Substituiu %d em READ\n", pid_vitima);
                     vitProcess->paginas[pag_vitima].local = 'S';
                 }
             }
@@ -198,6 +199,7 @@ void Write(int pagina, int id)
 
                 if(pid_vitima!=-1){
                     vitProcess = consulta(Processos, pid_vitima);
+                    printf("Substituiu %d em WRITE\n", pid_vitima);
                     vitProcess->paginas[pag_vitima].nroSubst++;
                     vitProcess->paginas[pag_vitima].local = 'S';
                 }
@@ -220,7 +222,7 @@ void endProc(int id)
     // libera processo no swap
     process* auxProcess;
 
-    if (existe(Processos, id)){
+    if (!(existe(Processos, id))){
         printf("Processo %d nao existe logo nao pode ser finalizado!\n", id);
         return;
     }
