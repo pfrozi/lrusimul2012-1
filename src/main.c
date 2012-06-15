@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     // Verifica se o primeiro comando é MEMSIZE
     if(strcmp("MEMSIZE",comando) < 0){
-        printf("\nERRO: Vece não definiu a quantidade de quadros da memoria. O primeiro comando do arquivo deve ser MEMSIZE.\n");
+        printf("\nERRO: Voce não definiu a quantidade de quadros da memoria. O primeiro comando do arquivo deve ser MEMSIZE.\n");
         return -2;
     }
     strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do MEMSIZE
@@ -40,18 +40,20 @@ int main(int argc, char *argv[])
     // inicializa memoria
     printf("Comando: MEMSIZE\nParametros: %s\n\n"
                         ,parametros[0]);
-    //memSize(atoi(parametros[0]));
+    memSize(atoi(parametros[0]));
 
     // le o resto do arquivo
     while(!feof(pFile)){
 
         // verifica o comando
-        fflush(pFile);
         fgets(linha,sizeof(linha),pFile);
+        corta(linha);
         strcpy(comando,strtok(linha," \t"));
-
-        if(!(strcmp("MEMSIZE",comando) < 0)){
-            printf("\nERRO: Vece não pode definir a quantidade de quadros da memoria 2 vezes.\n");
+        
+        if(strlen(comando)<4)
+            break;
+        if(!(strcmp("MEMSIZE ",comando) < 0)){
+            printf("\nERRO(Comando: %s): Voce nao pode definir a quantidade de quadros da memoria 2 vezes.\n",comando);
             return -3;
         }
 
@@ -73,7 +75,6 @@ int main(int argc, char *argv[])
             {
                 strcpy(parametros[0],strtok(NULL," \t"));     // extrai o parâmetro 1 do READ
                 strcpy(parametros[1],strtok(NULL," \t"));     // extrai o parâmetro 2 do READ
-                corta(parametros[1]);
 
                 printf("Comando: PROCSIZE\nParametros: %s\t %s\n\n"
                         ,parametros[0]
@@ -87,13 +88,13 @@ int main(int argc, char *argv[])
             {
                 strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do READ
                 strcpy(parametros[1],strtok(NULL," \t"));    // extrai o parâmetro 2 do READ
-                corta(parametros[1]);
+                
 
                 printf("Comando: READ\nParametros: %s\t %s\n\n"
                         ,parametros[0]
                         ,parametros[1]);
 
-                //Read(atoi(parametros[0]),atoi(parametros[1]));
+                Read(atoi(parametros[0]),atoi(parametros[1]));
 
                 break;
             }
@@ -101,7 +102,7 @@ int main(int argc, char *argv[])
             {
                 strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do WRITE
                 strcpy(parametros[1],strtok(NULL," \t"));    // extrai o parâmetro 2 do WRITE
-                corta(parametros[1]);
+                
 
                 printf("Comando: WRITE\nParametros: %s\t %s\n\n"
                         ,parametros[0]
@@ -114,7 +115,7 @@ int main(int argc, char *argv[])
             case ENDPROC:
             {
                 strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do ENDPROC
-                corta(parametros[0]);
+                
 
                 printf("Comando: ENDPROC\nParametros: %s\n\n"
                         ,parametros[0]);

@@ -48,7 +48,7 @@ void memSize(int size)
     clockPointer = 0;
     quant_frames = size;
     Memoria = criaMemoria(size);        // memoria
-    Processos = criaLista();           // area de swap, onde os processos são inicializados
+    Processos = criaLista();            // area de swap, onde os processos são inicializados
 }
 
 /*
@@ -87,7 +87,6 @@ void Read(int pagina, int id)
     int pageFault = 1;
     process* auxProcess;
 
-
     for(i = 0;i<quant_frames;i++){
         if((Memoria[i].pid == id) && (Memoria[i].pagina == pagina))   // não haverá page fault
         {
@@ -95,6 +94,7 @@ void Read(int pagina, int id)
             break;
         }
     }
+
 
     auxProcess = consulta(Processos, id); // se não existe retorna nulo
 
@@ -115,20 +115,21 @@ void Read(int pagina, int id)
             }
             else
             {
-
                 trataPageFault(Memoria,&pid_vitima,&pag_vitima,&frame);
-
-                vitProcess = consulta(Processos, pid_vitima);
+                
                 auxProcess->paginas[pagina].nroPageFault++;
                 auxProcess->paginas[pagina].acessos++;
                 auxProcess->paginas[pagina].local = 'M';
+
                 Memoria[frame].pid = id;
                 Memoria[frame].pagina = pagina;
                 Memoria[frame].bitRef = 1;
                 Memoria[frame].bitSujo = 0;
-
-                vitProcess->paginas[pag_vitima].nroSubst++;
-                vitProcess->paginas[pag_vitima].local = 'S';
+                if(pid_vitima!=-1){
+                    vitProcess = consulta(Processos, pid_vitima);
+                    vitProcess->paginas[pag_vitima].nroSubst++;
+                    vitProcess->paginas[pag_vitima].local = 'S';
+                }
             }
             break;
         }
@@ -149,11 +150,12 @@ void Write(int pagina, int id)
     int i;
 
     int frame;
-    int pageFault = 1;
-    process* auxProcess;
 
     int pid_vitima,pag_vitima;
     process* vitProcess;
+
+    int pageFault = 1;
+    process* auxProcess;
 
     for(i = 0;i<quant_frames;i++){
         if((Memoria[i].pid == id) && (Memoria[i].pagina == pagina))   // não haverá page fault
@@ -185,8 +187,7 @@ void Write(int pagina, int id)
             {
 
                 trataPageFault(Memoria,&pid_vitima,&pag_vitima,&frame);
-
-                vitProcess = consulta(Processos, pid_vitima);
+                
                 auxProcess->paginas[pagina].nroPageFault++;
                 auxProcess->paginas[pagina].acessos++;
                 auxProcess->paginas[pagina].local = 'M';
@@ -195,8 +196,12 @@ void Write(int pagina, int id)
                 Memoria[frame].bitRef = 1;
                 Memoria[frame].bitSujo = 1;
 
-                vitProcess->paginas[pag_vitima].nroSubst++;
-                vitProcess->paginas[pag_vitima].local = 'S';
+                if(pid_vitima!=-1){
+                    vitProcess = consulta(Processos, pid_vitima);
+                    vitProcess->paginas[pag_vitima].nroSubst++;
+                    vitProcess->paginas[pag_vitima].local = 'S';
+                }
+                
             }
             break;
         }
@@ -284,7 +289,7 @@ void trataPageFault(tmemoria* Memoria,int* pid_vitima, int* pag_vitima,int* fram
     *pid_vitima = -1;
     *pag_vitima = -1;
     *frame = -1;
-
+    
     //procura um quadro livre
     for(i = 0;i<quant_frames;i++)
     {

@@ -117,9 +117,10 @@ process* consulta(process* l, int pid)
     process *ptaux = l;  //ponteiro auxiliar para percorrer a lista
 
     /*procura o elemento na lista*/
-    while (ptaux !=NULL && (ptaux->pid != pid))
+    while (ptaux != NULL)
     {
-        ant = ptaux;
+        if(ptaux->pid == pid)
+            break;
         ptaux = ptaux->prox;
     }
 
@@ -141,7 +142,8 @@ int existe(process* l, int pid)
 
     /*verifica se achou*/
     if(ptaux != NULL)
-        return 1;
+        if(ptaux->estado == INICIALIZADO)
+            return 1;
     else
         return 0;
 }
