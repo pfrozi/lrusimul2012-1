@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
         return -2;
     }
     strcpy(parametros[0],strtok(NULL," \t"));    // extrai o parâmetro 1 do MEMSIZE
-    corta(parametros[0]);
+    //corta(parametros[0]);
 
     // inicializa memoria
     printf("Comando: MEMSIZE\nParametros: %s\n\n"
@@ -47,23 +47,24 @@ int main(int argc, char *argv[])
 
         // verifica o comando
         fgets(linha,sizeof(linha),pFile);
-        corta(linha);
+        //corta(linha);
         strcpy(comando,strtok(linha," \t"));
         
         if(strlen(comando)<4)
             break;
-        if(!(strcmp("MEMSIZE ",comando) < 0)){
+            
+        if(!(strcmp("MEMSIZE ",comando))){
             printf("\nERRO(Comando: %s): Voce nao pode definir a quantidade de quadros da memoria 2 vezes.\n",comando);
             return -3;
         }
 
-        if(!(strcmp("PROCSIZE",comando) < 0))
+        if(!(strcmp("PROCSIZE",comando)))
             enumComando = PROCSIZE;
-        else if(!(strcmp("READ",comando) < 0))
+        else if(!(strcmp("READ",comando)))
             enumComando = READ;
-        else if(!(strcmp("WRITE",comando) < 0))
+        else if(!(strcmp("WRITE",comando)))
             enumComando = WRITE;
-        else if(!(strcmp("ENDPROC",comando) < 0))
+        else if(!(strcmp("ENDPROC",comando)))
             enumComando = ENDPROC;
         else { // ERRO
             printf("\nERRO: Comando inválido: %s.\n", comando);

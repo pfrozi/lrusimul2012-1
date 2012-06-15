@@ -113,8 +113,7 @@ process* removeProc(process* l, int pid)
 */
 process* consulta(process* l, int pid)
 {
-    process *ant = NULL; //ponteiro auxiliar para a posição anterior
-    process *ptaux = l;  //ponteiro auxiliar para percorrer a lista
+    process* ptaux = l;  //ponteiro auxiliar para percorrer a lista
 
     /*procura o elemento na lista*/
     while (ptaux != NULL)
@@ -145,8 +144,7 @@ int existe(process* l, int pid)
         if(ptaux->estado == INICIALIZADO)
             return 1;
     }
-    else
-        return 0;
+    return 0;
 }
 
 /*
@@ -245,6 +243,8 @@ void imprimeArquivo(char nome_arquivo[], process* l)
     int i;
     int result;
 
+    printf("Nome arq: %s\n", nome_arquivo);
+    //arq = fopen("log.txt", "wt"); // abre para escrita de arquivo texto
     arq = fopen(nome_arquivo, "w"); // abre para escrita de arquivo texto
     if (arq != NULL) {
         if (l != NULL) {
