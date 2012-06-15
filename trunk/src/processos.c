@@ -141,9 +141,10 @@ int existe(process* l, int pid)
     ptaux = consulta(l, pid);
 
     /*verifica se achou*/
-    if(ptaux != NULL)
+    if(ptaux != NULL){
         if(ptaux->estado == INICIALIZADO)
             return 1;
+    }
     else
         return 0;
 }
@@ -244,7 +245,7 @@ void imprimeArquivo(char nome_arquivo[], process* l)
     int i;
     int result;
 
-    arq = fopen(nome_arquivo, "wt"); // abre para escrita de arquivo texto
+    arq = fopen(nome_arquivo, "w"); // abre para escrita de arquivo texto
     if (arq != NULL) {
         if (l != NULL) {
             for(ptaux=l; ptaux!=NULL; ptaux=ptaux->prox) {
