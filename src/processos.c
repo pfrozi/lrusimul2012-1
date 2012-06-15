@@ -215,7 +215,7 @@ void imprimeCrescente(process* l)
                 ptaux->pid, ptaux->size, ptaux->estado);
             for(i = 0; i < ptaux->size; i++) {
                 printf("Pagina Acessos(R/W) NroPageFault NroSubst Local\n");
-                printf("%-7d %12d %12d %8d %5c\n",
+                printf("%-6d %12d %12d %8d %5c\n",
                     ptaux->paginas[i].pagina,
                     ptaux->paginas[i].acessos,
                     ptaux->paginas[i].nroPageFault,
@@ -263,7 +263,7 @@ void imprimeArquivo(char nome_arquivo[], process* l)
                         break;
                     }
 
-                    result = fprintf(arq, "%-7d %12d %12d %8d\n",
+                    result = fprintf(arq, "%-6d %12d %12d %8d\n",
                         ptaux->paginas[i].pagina,
                         ptaux->paginas[i].acessos,
                         ptaux->paginas[i].nroPageFault,
