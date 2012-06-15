@@ -213,8 +213,8 @@ void imprimeCrescente(process* l)
         for(ptaux=l, contador = 0; ptaux!=NULL; ptaux=ptaux->prox, contador++) {
             printf("PROCESSO %d - Size(paginas) = %d - Estado = %d\n",
                 ptaux->pid, ptaux->size, ptaux->estado);
+            printf("Pagina Acessos(R/W) NroPageFault NroSubst Local\n");
             for(i = 0; i < ptaux->size; i++) {
-                printf("Pagina Acessos(R/W) NroPageFault NroSubst Local\n");
                 printf("%-6d %12d %12d %8d %5c\n",
                     ptaux->paginas[i].pagina,
                     ptaux->paginas[i].acessos,
@@ -255,9 +255,9 @@ void imprimeArquivo(char nome_arquivo[], process* l)
                     printf("\nERRO: Não foi possivel gravar no arquivo de LOG (1).\n");
                     break;
                 }
-
+                result = fprintf(arq, "Pagina Acessos(R/W) NroPageFault NroSubst\n");
                 for(i = 0; i < ptaux->size; i++) {
-                    result = fprintf(arq, "Pagina Acessos(R/W) NroPageFault NroSubst\n");
+                    
                     if(result == EOF) {
                         printf("\nERRO: Não foi possivel gravar no arquivo de LOG (2).\n");
                         break;
