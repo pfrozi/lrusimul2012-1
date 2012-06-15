@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
                         ,parametros[0]
                         ,parametros[1]);
 
-                //Write(atoi(parametros[0]),atoi(parametros[1]));
+                Write(atoi(parametros[0]),atoi(parametros[1]));
 
                 break;
             }
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
                 printf("Comando: ENDPROC\nParametros: %s\n\n"
                         ,parametros[0]);
 
-                //endProc(atoi(parametros[0]));
+                endProc(atoi(parametros[0]));
 
                 break;
             }
