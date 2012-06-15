@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     // Abre arquivo para leitura
     pFile = fopen (nomeArquivo,"r");
     if (pFile==NULL){
-        printf("\nERRO: Arquivo não existe ou é inválido.\n");
+        printf("\nERRO: Arquivo nao existe ou eh invalido.\n");
         return -1;
     }
 
