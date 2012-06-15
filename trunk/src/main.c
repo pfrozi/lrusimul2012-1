@@ -25,6 +25,10 @@ int main(int argc, char *argv[])
 
     // Abre arquivo para leitura
     pFile = fopen (nomeArquivo,"r");
+    if (pFile==NULL){
+        printf("\nERRO: Arquivo não existe ou é inválido.\n");
+        return -1;
+    }
 
     fgets(linha,sizeof(linha),pFile);
     strcpy(comando,strtok(linha," \t"));
